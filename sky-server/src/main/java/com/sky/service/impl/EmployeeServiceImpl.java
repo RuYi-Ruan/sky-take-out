@@ -86,17 +86,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 设置默认密码123456, 同样需要md5加密
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        // 设置创建时间与修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        // TODO 后期需要改为操作用户的id
         // 获取当前登录用户的id-线程中的局部变量
         Long currentId = BaseContext.getCurrentId();
         log.info("当前用户id为：" + currentId);
-        employee.setCreateUser(currentId);
-        employee.setUpdateUser(currentId);
-
         // 插入数据库
         employeeMapper.insert(employee);
     }
@@ -114,5 +106,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         pageResult.setRecords(page.getResult());
 
         return pageResult;
+    }
+
+    // 启用禁用员工账号
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .id(id)
+                .status(status)
+                .build();
+        employeeMapper.update(employee);
+    }
+
+    // 根据id获取指定员工信息
+    @Override
+    public Employee getById(Long id) {
+        return employeeMapper.getById(id);
+    }
+
+    // 编辑员工信息
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        employeeMapper.update(employee);
     }
 }
