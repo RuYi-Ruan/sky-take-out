@@ -37,3 +37,10 @@ sky:
     admin-ttl: 720000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+  cos:
+    baseUrl: ${sky.cos.baseUrl}
+    regionName: ${sky.cos.regionName}
+    accessKey: ${sky.cos.accessKey}
+    secretKey: ${sky.cos.secretKey}
+    bucketName: ${sky.cos.bucketName}
+    folderPrefix: ${sky.cos.folderPrefix}
