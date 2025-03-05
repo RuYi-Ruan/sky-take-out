@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
         // 当前登录用户id
         Long userId = BaseContext.getCurrentId();
         User user = userMapper.getById(userId);
-
+        // 微信支付相关代码，由于个人无法获得商家资质跳过微信支付
 //        //调用微信支付接口，生成预支付交易单
 //        JSONObject jsonObject = weChatPayUtil.pay(
 //                ordersPaymentDTO.getOrderNumber(), //商户订单号
@@ -152,15 +152,12 @@ public class OrderServiceImpl implements OrderService {
         Integer OrderPaidStatus = Orders.PAID; // 支付状态，已支付
         Integer OrderStatus = Orders.TO_BE_CONFIRMED; // 订单状态，待接单
 
-        // 发现没有将支付时间 check_out属性赋值，所以在这里更新
-        LocalDateTime check_out_time = LocalDateTime.now();
-
         // 获取订单号码
         String orderNumber = ordersPaymentDTO.getOrderNumber();
 
         // 调用updateStatus，用于替换微信支付更新数据库状态的问题
         log.info("调用updateStatus，用于替换微信支付更新数据库状态的问题");
-        orderMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, orderNumber);
+        orderMapper.updateStatus(OrderStatus, OrderPaidStatus, LocalDateTime.now(), orderNumber);
 
         return vo;
     }
